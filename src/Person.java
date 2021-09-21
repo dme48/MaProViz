@@ -6,9 +6,14 @@ import java.util.Random;
  * @author Diego Martínez
  */
 public class Person {
-    private final int[] preferences;
+    private final int position;
     private boolean married;
     private Person partner;
+
+    /** Array with the preferences of the Person. preferences[i] = j means that for this person, their ith priority
+     * would be the Person in position jth. Hence their best option is preferences[0] and their worst
+     * preferences[N-1].*/
+    private final int[] preferences;
 
     /**
      * Creates an ordered array and uses the Fisher-Yates algorithm to shuffle it.
@@ -33,7 +38,12 @@ public class Person {
      *
      * @param N Number of males and females in the Mating Problem
      */
-    public Person(int N) {
+    public Person(int position, int N) {
+        if (N <= 0) {
+            throw new IllegalArgumentException("N must be a positive integer.");
+        }
+
+        this.position = position;
         this.preferences = Person.getShuffledArray(N);
         this.married = false;
         this.partner = null;
@@ -48,5 +58,19 @@ public class Person {
 
     public void marry(Person newPartner) {
         this.partner = newPartner;
+        this.married = true;
+        if (!newPartner.married) {
+            newPartner.partner = this;
+            newPartner.married = true;
+        }
+    }
+
+    public int[] getPreferences() {
+        return this.preferences;
+    }
+
+    public int getPosition() {
+        return this.position;
     }
 }
+
