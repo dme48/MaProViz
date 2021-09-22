@@ -17,11 +17,13 @@ public class Woman extends Person {
     }
 
     /**
-     * Chooses the best proponent from a set of Man instances and marries him.
+     * Chooses the best proponent from a set of Man instances and marries him. Does nothing if dict. is empty.
      *
      * @param proponents    dictionary of (position, Man in position) with the men interested in the Woman.
      */
     public void chooseHusband(Dictionary<Integer, Man> proponents) {
+        if (proponents.isEmpty())
+            return;
         int [] preferences = this.getPreferences();
         Man chosen = null;
 

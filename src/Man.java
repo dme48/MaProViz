@@ -24,7 +24,7 @@ public class Man extends Person {
     /**
      * @return  integer with the position of the woman he is going to propose to.
      */
-    public int proposesTo() {
+    public int currentlyProposesTo() {
         return this.getPreferences()[this.timesRejected];
     }
 }

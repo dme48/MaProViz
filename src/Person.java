@@ -49,6 +49,10 @@ public class Person {
         this.partner = null;
     }
 
+    public boolean isMarried() {
+        return this.married;
+    }
+
     public Person getPartner() {
         if (this.partner == null) {
             System.out.println("Warning, accessing the partner of an unmarried person.");
