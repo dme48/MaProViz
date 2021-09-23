@@ -79,9 +79,15 @@ public class MatingManager {
             Dictionary<Integer, Man> proponents = interestedIn[woman.getPosition()];
             woman.chooseHusband(proponents);
         }
-
+        this.relaxMenRejections();
     }
 
+    /**
+     * Creates an array of dictionaries, with the i-eth entry corresponding to the i-eth Woman. Then each entry is
+     * filled with the Man instances interested in that woman.
+     * @return  Array of dictionaries: the i-eth entry corresponds to the i-eth woman; each entry of the dictionary is
+     *          of the shape (position, man in position).
+     */
     private Dictionary<Integer, Man>[] getInterests() {
         Dictionary<Integer, Man>[] interestedIn = new Dictionary[this.N];
         for (int n = 0; n < this.N; n++)
@@ -94,6 +100,19 @@ public class MatingManager {
         }
 
         return interestedIn;
+    }
+
+    /**
+     * Prints all of the married couples at the terminal.
+     */
+    public void printCouples() {
+        String messageTemplate = "The Man on position %d is married to the woman in position %d.";
+        for (Man man : this.men) {
+            if (!man.isMarried())
+                continue;
+            Person woman = man.getPartner();
+            System.out.println(String.format(messageTemplate, man.getPosition(), woman.getPosition()));
+        }
     }
 
 }

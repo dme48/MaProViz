@@ -5,7 +5,7 @@ import java.util.Random;
  *
  * @author Diego Martínez
  */
-public class Person {
+public abstract class Person {
     private final int position;
     private boolean married;
     private Person partner;
