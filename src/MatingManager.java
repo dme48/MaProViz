@@ -1,5 +1,7 @@
 import java.util.Dictionary;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Set;
 
 /**
  * Coordinates the people and their dates in the Mating Problem Simulation. Creates a TODO
@@ -11,6 +13,8 @@ public class MatingManager {
     private final int N;
     private final Man[] men;
     private final Woman[] women;
+    private final Set<Man> unmarriedMen;
+    private final Set<Woman> unmarriedWomen;
 
     /**
      * Creates N couples of Man and Woman instances
@@ -24,10 +28,14 @@ public class MatingManager {
         this.N = N;
         this.men = new Man[N];
         this.women = new Woman[N];
+        this.unmarriedWomen = new HashSet<>();
+        this.unmarriedMen = new HashSet<>();
 
         for (int n = 0; n < N; n++) {
             this.men[n] = new Man(n, N);
             this.women[n] = new Woman(n, N);
+            this.unmarriedWomen.add(this.women[n]);
+            this.unmarriedMen.add(this.men[n]);
         }
     }
 
@@ -36,16 +44,11 @@ public class MatingManager {
      * @return  integer representing the amount of current married couples.
      */
     public int howManyMarried() {
-        int married = 0;
-        for (Man man : this.men)
-            if (man.isMarried())
-                married++;
-
-        return married;
+        return this.N - this.unmarriedWomen.size();
     }
 
     public boolean hasFinished() {
-        return (this.howManyMarried() == this.N);
+        return (this.unmarriedWomen.size() == 0);
     }
 
     /**
@@ -58,9 +61,7 @@ public class MatingManager {
      * this rejection count accordingly for every man in the men array.
      */
     private void relaxMenRejections() {
-        for (Man man : this.men) {
-            if (man.isMarried())
-                continue;
+        for (Man man : this.unmarriedMen) {
             Woman nextWoman = this.women[man.currentlyProposesTo()];
             while (nextWoman.isMarried()) {
                 man.reject();
@@ -72,12 +73,15 @@ public class MatingManager {
     /**
      * For every woman, gathers the interested men and feeds them to Woman.chooseProponent.
      * Then, it relaxes the men rejections.
+     * this.marry modifies the this.unmarried* sets, hence the cloning at the for loop.
      */
     public void singleIteration() {
         Dictionary<Integer, Man>[] interestedIn = this.getInterests();
-        for (Woman woman : this.women) {
-            Dictionary<Integer, Man> proponents = interestedIn[woman.getPosition()];
-            woman.chooseHusband(proponents);
+        for (Woman newWife : new HashSet<>(this.unmarriedWomen)) {
+            Dictionary<Integer, Man> proponents = interestedIn[newWife.getPosition()];
+            Man newHusband = newWife.chooseHusband(proponents);
+            if (newHusband != null)
+                this.marry(newWife, newHusband);
         }
         this.relaxMenRejections();
     }
@@ -90,16 +94,21 @@ public class MatingManager {
      */
     private Dictionary<Integer, Man>[] getInterests() {
         Dictionary<Integer, Man>[] interestedIn = new Dictionary[this.N];
-        for (int n = 0; n < this.N; n++)
-            interestedIn[n] = new Hashtable<>();
 
-        for (int i = 0; i < this.N; i++) {
-            Man man = this.men[i];
-            int proposesTo = man.currentlyProposesTo();
-            interestedIn[proposesTo].put(i, man);
+        for (Man man : this.unmarriedMen) {
+            int womanPosition = man.currentlyProposesTo();
+            if (interestedIn[womanPosition] == null)
+                interestedIn[womanPosition] = new Hashtable<>();
+            interestedIn[womanPosition].put(man.getPosition(), man);
         }
 
         return interestedIn;
+    }
+
+    private void marry(Woman wife, Man husband) {
+        wife.marry(husband);
+        this.unmarriedMen.remove(husband);
+        this.unmarriedWomen.remove(wife);
     }
 
     /**

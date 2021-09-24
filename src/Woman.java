@@ -21,18 +21,17 @@ public class Woman extends Person {
      *
      * @param proponents    dictionary of (position, Man in position) with the men interested in the Woman.
      */
-    public void chooseHusband(Dictionary<Integer, Man> proponents) {
-        if (proponents.isEmpty())
-            return;
-        int [] preferences = this.getPreferences();
-        Man chosen = null;
+    public Man chooseHusband(Dictionary<Integer, Man> proponents) {
+        if (proponents == null || proponents.isEmpty())
+            return null;
 
-        for (int pref : preferences) {
+        Man chosen = null;
+        for (int pref : this.getPreferences()) {
             chosen = proponents.get(pref);
             if (chosen != null)
                 break;
         }
-        this.marry(chosen);
+        return chosen;
     }
 
     public static void main(String[] args) {
