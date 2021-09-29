@@ -22,7 +22,7 @@
  *       it can cause flicker
  *
  ******************************************************************************/
-
+package Princeton;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
