@@ -6,8 +6,6 @@
  *  Interface that accompanies Draw.java.
  ******************************************************************************/
 
-package edu.princeton.cs.algs4;
-
 /**
  *  <i>DrawListener</i>. This interface provides a basic capability for
  *  responding to keyboard in mouse events from {@link Draw} via callbacks.
