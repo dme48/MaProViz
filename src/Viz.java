@@ -30,6 +30,34 @@ public class Viz {
         //TODO addPropositionArrows
     }
 
+    /**
+     * Class that represents a person in the visualization.
+     */
+    private class PersonCircle {
+        private int displayNumber;
+        private int position;
+        private boolean isMan;
+        /**
+         * Saves the necessary information for the class
+         * @param displayNumber number of the person to be displayed
+         * @param position position of the man, respective to the remaining men
+         * @param isMan is a man (as opposed to a woman)
+         */
+        public PersonCircle(int displayNumber, int position, boolean isMan) {
+            this.displayNumber = displayNumber;
+            this.position = position;
+            this.isMan = isMan;
+        }
+
+        public void drawSelf() {
+            //TODO
+        }
+
+        public void drawProposalArrow() {
+            //TODO
+        }
+    }
+
     public static void main(String[] args) {
         //TODO bit of unit testing
     }
